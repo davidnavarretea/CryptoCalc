@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
+import Form from './components/Form'
 import CryptoImage from './img/crypto.webp'
 /* STYLED */
 // H1
@@ -43,6 +44,7 @@ const App = () => {
     <Container>
       <div>
         <H1>Check Crypto</H1>
+        <Form/>
       </div>
       <Image
         src={CryptoImage}
