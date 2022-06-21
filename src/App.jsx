@@ -3,12 +3,20 @@ import styled from 'styled-components'
 import Form from './components/Form'
 import CryptoImage from './img/crypto.webp'
 /* STYLED */
+// Wrapper
+const Wrapper = styled.div`
+@media (min-width: 992px){
+  display: flex;
+  height: 100vh;
+  align-items: center;
+}
+`
 // H1
 const H1 = styled.h1`
   font-family: 'Lato', sans-serif;
   color: #feedb5;
   text-align: center;
-  font-size: 3.4rem;
+  font-size: 4.5rem;
   font-weight: 700;
   margin: 8rem 0 5rem 0;
   &::after {
@@ -35,22 +43,30 @@ const Container = styled.div`
 const Image = styled.img`
   width: 75%;
   max-width: 40rem;
-  margin: 10rem auto 0 auto;
+  margin: 2.3rem auto 0 auto;
   display: block;
 `
 /* HTML */
 const App = () => {
+/* USE STATES */
+const [currency, setCurrency] = useState('eur')
+const [crypto, setCrypto] = useState('bitcoin')
   return (
-    <Container>
-      <div>
-        <H1>Check Crypto</H1>
-        <Form/>
-      </div>
-      <Image
-        src={CryptoImage}
-        alt='Crypto'
-      />
-    </Container>
+    <Wrapper>
+      <Container>
+        <div>
+          <H1>Check Crypto</H1>
+          <Form
+          setCurrency = {setCurrency}
+          setCrypto = {setCrypto}
+          />
+        </div>
+        <Image
+          src={CryptoImage}
+          alt='Crypto'
+        />
+      </Container>
+    </Wrapper>
   )
 }
 
