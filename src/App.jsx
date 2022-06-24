@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Form from './components/Form'
 import CryptoImage from './img/crypto.webp'
+import Compare from './components/Compare'
+import Spinner from './components/Spinner'
 /* STYLED */
 // Wrapper
 const Wrapper = styled.div`
@@ -18,7 +20,7 @@ const H1 = styled.h1`
   text-align: center;
   font-size: 4.5rem;
   font-weight: 700;
-  margin: 8rem 0 5rem 0;
+  margin: 8rem 0 2rem 0;
   &::after {
     content: '';
     width: 15rem;
@@ -51,21 +53,25 @@ const App = () => {
 /* USE STATES */
 const [currency, setCurrency] = useState('EUR')
 const [crypto, setCrypto] = useState('BTC')
+const [cryptoData, setCryptoData] = useState([])
 const [coins, setCoins] = useState({})
 const [result, setResult] = useState({})
+const [loading, setLoading] = useState(false)
 // USE EFFECT
 useEffect(() => {
   if(Object.keys(coins).length > 0){
     const consultCrypto = async () => {
+      setLoading(true)
+      setResult({})
       const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coins.crypto}&tsyms=${coins.currency}`
       const search = await fetch(url)
       const result = await search.json()
       setResult(result.DISPLAY[crypto][currency])
+      setLoading(false)
     }
     consultCrypto()
   }
 }, [coins])
-
   return (
     <Wrapper>
       <Container>
@@ -77,7 +83,11 @@ useEffect(() => {
           crypto = {crypto}
           setCrypto = {setCrypto}
           setCoins = {setCoins}
+          cryptoData = {cryptoData}
+          setCryptoData = {setCryptoData}
           />
+          {loading && <Spinner/>}
+          {Object.keys(result).length > 0 && <Compare result = {result}/>}
         </div>
         <Image
           src={CryptoImage}

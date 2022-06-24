@@ -11,11 +11,17 @@ const Fieldset = styled.fieldset`
 border: none;
 display: flex;
 justify-content: center;
+@media (max-width: 992px){
+  flex-direction: column;
+}
 `
 const Label = styled.label`
 color: #feedb5;
 font-size: 3rem;
 margin-right: 1rem;
+@media (max-width: 992px){
+  margin-bottom: 0.5rem;
+}
 `
 const Pick = styled.select`
   background-color: #e9ab64;
@@ -53,11 +59,10 @@ const Input = styled.input`
   }
 `
 // COMPONENT
-const Form = ({currency, setCurrency, crypto, setCrypto, setCoins}) => {
-  const [cryptoData, setCryptoData] = useState([])
+const Form = ({currency, setCurrency, crypto, setCrypto, setCoins, cryptoData, setCryptoData}) => {
   useEffect(() => {
     const request = async () => {
-      const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD'
+      const url = 'https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=EUR'
       const search = await fetch(url)
       const result = await search.json()
       const data = result.Data.map(crypto => {
