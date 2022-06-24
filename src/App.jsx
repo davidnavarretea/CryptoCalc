@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Form from './components/Form'
 import CryptoImage from './img/crypto.webp'
@@ -49,16 +49,34 @@ const Image = styled.img`
 /* HTML */
 const App = () => {
 /* USE STATES */
-const [currency, setCurrency] = useState('eur')
-const [crypto, setCrypto] = useState('bitcoin')
+const [currency, setCurrency] = useState('EUR')
+const [crypto, setCrypto] = useState('BTC')
+const [coins, setCoins] = useState({})
+const [result, setResult] = useState({})
+// USE EFFECT
+useEffect(() => {
+  if(Object.keys(coins).length > 0){
+    const consultCrypto = async () => {
+      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${coins.crypto}&tsyms=${coins.currency}`
+      const search = await fetch(url)
+      const result = await search.json()
+      setResult(result.DISPLAY[crypto][currency])
+    }
+    consultCrypto()
+  }
+}, [coins])
+
   return (
     <Wrapper>
       <Container>
         <div>
           <H1>Check Crypto</H1>
           <Form
+          currency = {currency}
           setCurrency = {setCurrency}
+          crypto = {crypto}
           setCrypto = {setCrypto}
+          setCoins = {setCoins}
           />
         </div>
         <Image

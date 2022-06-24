@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import styled from "styled-components"
 // STYLED
 const Formm = styled.form`
@@ -23,6 +24,11 @@ const Pick = styled.select`
   border-radius: 2rem;
   padding: 0 1rem;
   text-align: center;
+  &:hover{
+    cursor: pointer;
+    background-color: #e9a65a;
+  }
+  transition: background-color .3s ease;
   @media (max-width: 992px){
     font-size: 2rem;
   }
@@ -37,14 +43,45 @@ const Input = styled.input`
   margin-top: 1rem;
   display: flex;
   justify-content: center;
+  &:hover{
+    cursor: pointer;
+    background-color: #e9a65a;
+  }
+  transition: background-color .3s ease;
   @media (max-width: 992px){
     font-size: 2rem;
   }
 `
-// Variables
-const Form = ({setCurrency, setCrypto}) => {
+// COMPONENT
+const Form = ({currency, setCurrency, crypto, setCrypto, setCoins}) => {
+  const [cryptoData, setCryptoData] = useState([])
+  useEffect(() => {
+    const request = async () => {
+      const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD'
+      const search = await fetch(url)
+      const result = await search.json()
+      const data = result.Data.map(crypto => {
+        const cryptos = {
+          id: crypto.CoinInfo.Name,
+          name: crypto.CoinInfo.FullName,
+        }
+        return cryptos
+      })
+      setCryptoData(data)
+    }
+    request()
+  }, [])
+  // HandleSubmit
+  const handleSubmit = e => {
+    e.preventDefault()
+    setCoins({
+      currency,
+      crypto
+    })
+  }
   return (
-    <Formm>
+    <Formm
+    onSubmit={handleSubmit}>
       <Fieldset>
         <Label>Choose Currency</Label>
         <Pick
@@ -52,10 +89,10 @@ const Form = ({setCurrency, setCrypto}) => {
           setCurrency(e.target.value)
         }}
         >
-          <option value='eur'>€ EUR</option>
-          <option value='usd'>$ USD</option>
-          <option value='gbp'>£ GBP</option>
-          <option value='ars'>$ ARS</option>
+          <option value='EUR'>€ EUR</option>
+          <option value='USD'>$ USD</option>
+          <option value='GBP'>£ GBP</option>
+          <option value='ARS'>$ ARS</option>
         </Pick>
       </Fieldset>
       <Fieldset>
@@ -65,13 +102,12 @@ const Form = ({setCurrency, setCrypto}) => {
           setCrypto(e.target.value)
         }}
         >
-          <option value='bitcoin'>Bitcoin</option>
-          <option value='ethereum'>Ethereum</option>
-          <option value='maker'>Maker</option>
-          <option value='pax gold'>PAX Gold</option>
+          {cryptoData.map(e => (
+            <option key={e.id} value={e.id}>{e.name}</option>
+          ))}
         </Pick>
       </Fieldset>
-      <Input type='button' value='Check'/>
+      <Input type='submit' value='Check'/>
     </Formm>
   )
 }
